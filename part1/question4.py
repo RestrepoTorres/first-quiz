@@ -11,7 +11,7 @@ import pets_db
 ################################################################################
 #
 # Instructions:
-# Question 4 and Question 5 are about writing SQL. THey use the database that is 
+# Question 4 and Question 5 are about writing SQL. They use the database that is 
 # created in the file `pets_db.py`. 
 # These questions use a database called SQLite. You do not need to install anything.
 # In the file `pets_db.py` three tables are created. Data is then added to each 
