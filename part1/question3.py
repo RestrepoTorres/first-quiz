@@ -37,7 +37,7 @@ class oven:
   def freeze(self):
     print('lowering temperature...')
     self.wait()
-    if(self.items == ['water', 'air'] and self.get_temperature() == -100):
+    if(self.items == ['water', 'air'] and self.get_temperature() <= -100):
       self.output ='snow'
 
   def boil(self):
@@ -45,7 +45,7 @@ class oven:
     self.wait()
     if(self.items == ['lead', 'mercury'] and self.get_temperature() == 5000):
       self.output ='gold'
-    if(self.items == ['cheese', 'dough', 'tomato'] and self.get_temperature() == 150):
+    elif(self.items == ['cheese', 'dough', 'tomato'] and self.get_temperature() == 150):
       self.output ='pizza'
   
   def wait(self):

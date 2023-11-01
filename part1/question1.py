@@ -22,13 +22,12 @@ def get_city_temperature(city):
       return 16
    if city == "New York":
       return 14
-   else:
-      return "Temperature not known"
+   return "Temperature not known"
 
 
 def get_city_weather(city):
 
-  sky_condition = None
+  sky_condition = 'indeterminate sky condition'
 
   if city == "Sao Paulo":
      sky_condition = "cloudy"
@@ -36,8 +35,8 @@ def get_city_weather(city):
      sky_condition = "rainy"
   elif city == "Quito":
      sky_condition = "sunny"
-  else:
-     sky_condition = 'indeterminate sky condition'
+  
+     
 
   temperature = get_city_temperature(city)
 

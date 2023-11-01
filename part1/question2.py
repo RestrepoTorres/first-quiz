@@ -16,7 +16,7 @@
 # `question2_test.py.`
 
 def exchange(tuple):
-  return tuple[1], tuple[0]
+  return tuple[::-1] 
 
 swapper = exchange
 
