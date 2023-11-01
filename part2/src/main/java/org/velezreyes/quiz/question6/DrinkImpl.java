@@ -1,20 +1,24 @@
 package org.velezreyes.quiz.question6;
 
-public enum DrinkImpl implements Drink{
+public enum DrinkImpl implements Drink {
 
-    KarenTea("KarenTea",false, 1f),
+    KarenTea("KarenTea", false, 1f),
     ScottCola("ScottCola", true, 0.75f);
+
     private final String name;
     private final boolean isFizzy;
     private final float price;
-    DrinkImpl(String name, boolean isFizzy, float price)  {
+
+    DrinkImpl(String name, boolean isFizzy, float price) {
         this.name = name;
         this.isFizzy = isFizzy;
         this.price = price;
     }
-    public float getPrice(){
+
+    public float getPrice() {
         return price;
     }
+
     @Override
     public String getName() {
         return name;
@@ -34,7 +38,3 @@ public enum DrinkImpl implements Drink{
         throw new UnknownDrinkException();
     }
 }
-
-
-
-
