@@ -11,6 +11,9 @@ index 3b47800..b15ac6f 100644
  
  # VS Code files for those working on multiple tools
  .vscode/
+diff --git a/first_quiz_submission.patch b/first_quiz_submission.patch
+new file mode 100644
+index 0000000..e69de29
 diff --git a/part1/question1.py b/part1/question1.py
 index 5c99fdb..d34b4da 100644
 --- a/part1/question1.py
