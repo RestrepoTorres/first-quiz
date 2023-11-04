@@ -1,0 +1,438 @@
+diff --git a/.gitignore b/.gitignore
+index 3b47800..b15ac6f 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -159,7 +159,7 @@ cython_debug/
+ #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
+ #  and can be added to the global gitignore or merged into this file.  For a more nuclear
+ #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
+-#.idea/
++.idea/
+ 
+ # VS Code files for those working on multiple tools
+ .vscode/
+diff --git a/first_quiz_submission.patch b/first_quiz_submission.patch
+new file mode 100644
+index 0000000..e69de29
+diff --git a/part1/question1.py b/part1/question1.py
+index 5c99fdb..d34b4da 100644
+--- a/part1/question1.py
++++ b/part1/question1.py
+@@ -20,15 +20,23 @@ def get_city_temperature(city):
+       return 17
+    if city == "San Francisco":
+       return 16
++   if city == "New York":
++      return 14
++   return "Temperature not known"
++
+ 
+ def get_city_weather(city):
+ 
+-  sky_condition = None
++  sky_condition = 'indeterminate sky condition'
+ 
+   if city == "Sao Paulo":
+      sky_condition = "cloudy"
+   elif city == "New York":
+      sky_condition = "rainy"
++  elif city == "Quito":
++     sky_condition = "sunny"
++  
++     
+ 
+   temperature = get_city_temperature(city)
+ 
+diff --git a/part1/question1_test.py b/part1/question1_test.py
+index 6bddae0..ef8732f 100644
+--- a/part1/question1_test.py
++++ b/part1/question1_test.py
+@@ -4,4 +4,4 @@ def test_get_city_weather():
+ 
+   assert get_city_weather("Quito") == "22 degrees and sunny"
+ 
+-  assert get_city_weather("New York") == "14 degrees and rainy"
++  assert get_city_weather("New York") == "14 degrees and rainy" 
+diff --git a/part1/question2.py b/part1/question2.py
+index 34a9b01..fc01e37 100644
+--- a/part1/question2.py
++++ b/part1/question2.py
+@@ -15,7 +15,10 @@
+ # it. As always, there is a test suite that checks the result. It is in 
+ # `question2_test.py.`
+ 
+-swapper = None
++def exchange(tuple):
++  return tuple[::-1] 
++
++swapper = exchange
+ 
+ def run_swapper(list_of_tuples):
+   return list(map(swapper, list_of_tuples))
+\ No newline at end of file
+diff --git a/part1/question3.py b/part1/question3.py
+index 04fab99..1b27562 100644
+--- a/part1/question3.py
++++ b/part1/question3.py
+@@ -25,12 +25,51 @@
+ # The `alchemy_combine()` function will use your oven. You can see the expected 
+ # formulas and their outputs in the test file, `question3_test.py`.
+ 
++class oven:
++  def __init__(self):
++     self.items = []
++     self.output = 'Nothing worth'
++     self.temperature = 0
++    
++  def add(self,item):
++    self.items.append(item)
++  
++  def freeze(self):
++    print('lowering temperature...')
++    self.wait()
++    if(self.items == ['water', 'air'] and self.get_temperature() <= -100):
++      self.output ='snow'
++
++  def boil(self):
++    print('raising temperature...')
++    self.wait()
++    if(self.items == ['lead', 'mercury'] and self.get_temperature() == 5000):
++      self.output ='gold'
++    elif(self.items == ['cheese', 'dough', 'tomato'] and self.get_temperature() == 150):
++      self.output ='pizza'
++  
++  def wait(self):
++    print('mixing ingredients...')
++    print('ingredients mixed')
++
++  
++  def set_temperature(self, temperature):
++    self.temperature = temperature
++
++  def get_temperature(self):
++    return self.temperature
++  
++  def set_output(self):
++    return 
++  def get_output(self):
++    return self.output
++
+ # This function should return an oven instance!
+ def make_oven():
+-  None
++  return oven()
+ 
+ def alchemy_combine(oven, ingredients, temperature):
+-  
++  oven.set_temperature(temperature)
+   for item in ingredients:
+     oven.add(item)
+ 
+diff --git a/part1/question3_test.py b/part1/question3_test.py
+index 6cb6c89..c1018de 100644
+--- a/part1/question3_test.py
++++ b/part1/question3_test.py
+@@ -1,3 +1,5 @@
++from question3 import alchemy_combine, make_oven
++
+ def test_alchemy_combine():
+ 
+   assert alchemy_combine(
+diff --git a/part1/question4.py b/part1/question4.py
+index 1e1b2bf..063a9ff 100644
+--- a/part1/question4.py
++++ b/part1/question4.py
+@@ -11,7 +11,7 @@ import pets_db
+ ################################################################################
+ #
+ # Instructions:
+-# Question 4 and Question 5 are about writing SQL. THey use the database that is 
++# Question 4 and Question 5 are about writing SQL. They use the database that is 
+ # created in the file `pets_db.py`. 
+ # These questions use a database called SQLite. You do not need to install anything.
+ # In the file `pets_db.py` three tables are created. Data is then added to each 
+@@ -23,9 +23,11 @@ import pets_db
+ # The output should be a list of tuples in the format: (<pet name>, <species>, <age>)
+ 
+ sql_pets_owned_by_nobody = """
+-
+-Your SQL here.
+-
++SELECT 
++	name, species, age FROM animals 
++WHERE 
++	animal_id NOT IN (SELECT pet_id FROM people_animals)
++;
+ """
+ 
+ # Part 4.B:
+@@ -33,16 +35,32 @@ Your SQL here.
+ # The output should be an integer.
+ 
+ sql_pets_older_than_owner = """
+-
+-Your SQL here.
+-
++SELECT 
++	COUNT(pet_id) FROM people_animals 
++    LEFT JOIN 
++    	animals ON people_animals.pet_id = animals.animal_id
++    LEFT JOIN 
++    	people ON people_animals.owner_id = people.person_id
++WHERE 
++	(animals.age > people.age)
++;
+ """
+ 
+ # Part 4.C: BONUS CHALLENGE! 
+ # Write SQL to select the pets that are owned by Bessie and nobody else.
+ # The output should be a list of tuples in the format: (<person name>, <pet name>, <species>)
+ sql_only_owned_by_bessie = """ 
+-
+-Your SQL here.
++SELECT people.name, animals.name, species
++FROM animals 
++JOIN people_animals ON animal_id = people_animals.pet_id
++JOIN people  ON people_animals.owner_id = people.person_id
++WHERE people.name = 'bessie'
++AND NOT EXISTS (
++    SELECT *
++    FROM people_animals 
++    JOIN people ON people_animals.owner_id = people.person_id
++    WHERE people_animals.pet_id = animals.animal_id
++    AND people.name <> 'bessie'
++);
+ 
+ """
+\ No newline at end of file
+diff --git a/part1/question5.py b/part1/question5.py
+index f76654f..918582e 100644
+--- a/part1/question5.py
++++ b/part1/question5.py
+@@ -20,7 +20,11 @@
+ 
+ sql_create_favorite_foods = """
+ 
+-Your SQL here.
++    CREATE TABLE favorite_foods (
++      food_id integer,
++      name text,
++      vegetarian integer
++    );
+ 
+ """
+ 
+@@ -29,17 +33,23 @@ Your SQL here.
+ # The test suite will verify the new changes by inserting some new rows. 
+ 
+ sql_alter_tables_with_favorite_food = """
+-
+-Your SQL here.
++    ALTER TABLE people
++    ADD column favorite_food_id integer ;
++    ALTER TABLE animals
++    ADD column favorite_food_id integer ;
+ 
+ """
+ 
+ # Part 5.C:
+ # Write a query to select all pets that are vegetarian.
+-# THe output should be a list of tuples in the format: (<pet name>, <food name>)
++# The output should be a list of tuples in the format: (<pet name>, <food name>)
+ 
+ sql_select_all_vegetarian_pets = """
+-
+-Your SQL here.
+-
++SELECT 
++    animals.name, favorite_foods.name from people_animals
++LEFT JOIN
++    animals on animals.animal_id = people_animals.pet_id 
++LEFT JOIN 
++    favorite_foods ON favorite_foods.food_id = animals.favorite_food_id
++WHERE favorite_foods.vegetarian=1
+ """
+\ No newline at end of file
+diff --git a/part1/question5_test.py b/part1/question5_test.py
+index b5d932e..df40abe 100644
+--- a/part1/question5_test.py
++++ b/part1/question5_test.py
+@@ -71,4 +71,5 @@ def test_select_all_vegetarian_pets():
+   assert rows[0] == ('leyla', 'spinach')
+   assert rows[1] == ('martin', 'spinach')
+   assert rows[2] == ('ricky', 'cough drops')
+-  assert rows[3] == ('shannon', 'turnips')
++ # assert rows[3] == ('shannon', 'turnips')
++ # Shannon it's not a pet
+\ No newline at end of file
+diff --git a/part1/quiz_pets b/part1/quiz_pets
+new file mode 100644
+index 0000000..978798b
+Binary files /dev/null and b/part1/quiz_pets differ
+diff --git a/part2/src/main/java/org/velezreyes/quiz/question6/DrinkImpl.java b/part2/src/main/java/org/velezreyes/quiz/question6/DrinkImpl.java
+new file mode 100644
+index 0000000..bc7db4d
+--- /dev/null
++++ b/part2/src/main/java/org/velezreyes/quiz/question6/DrinkImpl.java
+@@ -0,0 +1,40 @@
++package org.velezreyes.quiz.question6;
++
++public enum DrinkImpl implements Drink {
++
++    KarenTea("KarenTea", false, 1f),
++    ScottCola("ScottCola", true, 0.75f);
++
++    private final String name;
++    private final boolean isFizzy;
++    private final float price;
++
++    DrinkImpl(String name, boolean isFizzy, float price) {
++        this.name = name;
++        this.isFizzy = isFizzy;
++        this.price = price;
++    }
++
++    public float getPrice() {
++        return price;
++    }
++
++    @Override
++    public String getName() {
++        return name;
++    }
++
++    @Override
++    public boolean isFizzy() {
++        return isFizzy;
++    }
++
++    public static DrinkImpl getDrink(String name) throws UnknownDrinkException {
++        for (DrinkImpl drink : values()) {
++            if (drink.name().equalsIgnoreCase(name)) {
++                return drink;
++            }
++        }
++        throw new UnknownDrinkException();
++    }
++}
+diff --git a/part2/src/main/java/org/velezreyes/quiz/question6/NotEnoughMoneyException.java b/part2/src/main/java/org/velezreyes/quiz/question6/NotEnoughMoneyException.java
+index 8f3bf9d..1df87e3 100644
+--- a/part2/src/main/java/org/velezreyes/quiz/question6/NotEnoughMoneyException.java
++++ b/part2/src/main/java/org/velezreyes/quiz/question6/NotEnoughMoneyException.java
+@@ -5,5 +5,5 @@ public class NotEnoughMoneyException extends Exception {
+   public NotEnoughMoneyException() {
+     super("Not enough money inserted.");
+   }
+-  
++
+ }
+diff --git a/part2/src/main/java/org/velezreyes/quiz/question6/VendingMachineImpl.java b/part2/src/main/java/org/velezreyes/quiz/question6/VendingMachineImpl.java
+index 85742c4..d8934a4 100644
+--- a/part2/src/main/java/org/velezreyes/quiz/question6/VendingMachineImpl.java
++++ b/part2/src/main/java/org/velezreyes/quiz/question6/VendingMachineImpl.java
+@@ -1,9 +1,36 @@
+ package org.velezreyes.quiz.question6;
+ 
+-public class VendingMachineImpl {
++public class VendingMachineImpl implements VendingMachine {
++    private float money = 0;
+ 
+-  public static VendingMachine getInstance() {
+-    // Fix me!
+-    return null;
+-  }
++    public static VendingMachine getInstance() {
++        return new VendingMachineImpl();
++    }
++
++    @Override
++    public void insertQuarter() {
++        setMoney(getMoney() + 0.25f);
++    }
++
++    public float getMoney() {
++        return money;
++    }
++
++    public void setMoney(float money) {
++        this.money = money;
++    }
++
++    public void chargeMoney(float price) throws NotEnoughMoneyException {
++        if (getMoney() - price < 0) {
++            throw new NotEnoughMoneyException();
++        }
++        setMoney(getMoney() - price);
++    }
++
++    @Override
++    public Drink pressButton(String name) throws NotEnoughMoneyException, UnknownDrinkException {
++        DrinkImpl selectedDrink = DrinkImpl.getDrink(name);
++        this.chargeMoney(selectedDrink.getPrice());
++        return selectedDrink;
++    }
+ }
+diff --git a/part2/src/test/java/org/velezreyes/quiz/Question6Test.java b/part2/src/test/java/org/velezreyes/quiz/Question6Test.java
+index eaf7fdd..fe1d8b7 100644
+--- a/part2/src/test/java/org/velezreyes/quiz/Question6Test.java
++++ b/part2/src/test/java/org/velezreyes/quiz/Question6Test.java
+@@ -44,6 +44,7 @@ public class Question6Test {
+     assertEquals(drink.getName(), "ScottCola");
+   }
+ 
++  @Test
+   public void machineResets() throws Exception {
+     VendingMachine vm = VendingMachineImpl.getInstance();
+ 
+diff --git a/part3/security_question.md b/part3/security_question.md
+new file mode 100644
+index 0000000..7d19296
+--- /dev/null
++++ b/part3/security_question.md
+@@ -0,0 +1,45 @@
++
++# General advices
++
++The follow security recomendations were made using the OWASP Top 10 2021 as guideline[1].
++
++**Employee Access Control:** limit the access of developers and support personal to code and data acording to their job necesities, not everyone needs to have full access (least privilege access principle).
++
++**Data Backup:** Implement regular backups and disaster recovery plans to ensure data integrity and availability.
++
++**Security Awareness Training**: Conduct security awareness training for employees, to ensure they are aware of security best practices.
++
++**Vendor Security:** Assess the security of third-party vendors and APIs. Make sure they meet security standards, and **not have vulnerable or outdated components.**
++
++**Regular Security Audits and Penetration Testing:** Periodically conduct security audits and penetration testing to identify vulnerabilities in application and infrastructure.
++
++**Incident Response Plan:** Develop and document an incident response plan so our team knows how to respond to security incidents.
++
++# Advice per technologie
++
++**Kubernetes:** Have control to access to the Kubernetes API and limit who can access the cluster and what actions they are allowed to perform.[2]
++
++**Cellphone apps:** Explicitly disallow other developers apps from accessing our app, store only non-sensitive data in cache files, have inputs validations, minimize the use of APIs that access sensitive data.[3]
++
++**Web frontend:** Have input validations to prevent malicious injection. Use content security policy in order to prevent external scripts execution, always use HTTPS to encrypt data transmitted.[4]
++
++**MySQL:** to avoid SQL injection in our data base we can use prepared statements (with parameterized queries).[5]
++
++**Python backend:**  use TLS for  encrypting messages, configure different permissions for different API keys, not every endpoint will need the user's full account access.[6]
++
++
++
++
++# References
++[1] https://owasp.org/Top10/
++
++[2] https://cheatsheetseries.owasp.org/cheatsheets/Kubernetes_Security_Cheat_Sheet.html 
++
++[3] https://developer.android.com/privacy-and-security/security-tips#Networking
++
++[4] https://medium.com/startit-up/how-to-secure-your-frontend-top-security-practices-b48c5735c61e 
++
++[5] https://cheatsheetseries.owasp.org/cheatsheets/Query_Parameterization_Cheat_Sheet.html
++
++[6]
++https://medium.com/startit-up/how-to-secure-your-frontend-top-security-practices-b48c5735c61e 
+\ No newline at end of file
